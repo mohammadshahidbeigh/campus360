@@ -20,3 +20,25 @@
 .chatbot-input-container input {
   width: calc(100% - 96px);
 }
+
+.App {
+  background-image: url("src/assets/images/miet-bg.png");
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+}
+
+/* Animation for the button text */
+@keyframes textFlash {
+  0%,
+  100% {
+    color: white;
+  }
+  50% {
+    color: yellow;
+  }
+}
+
+.animated-text {
+  animation: textFlash 1.5s infinite;
+}
