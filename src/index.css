@@ -27,18 +27,3 @@
   background-position: center;
   min-height: 100vh;
 }
-
-/* Animation for the button text */
-@keyframes textFlash {
-  0%,
-  100% {
-    color: white;
-  }
-  50% {
-    color: yellow;
-  }
-}
-
-.animated-text {
-  animation: textFlash 1.5s infinite;
-}
