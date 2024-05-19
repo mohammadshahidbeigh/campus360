@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Styles */
+.chatbot-container {
+  width: 100%;
+}
+
+.chatbot-header .logo {
+  width: 40px;
+  height: 40px;
+}
+
+.chatbot-conversation {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.chatbot-input-container input {
+  width: calc(100% - 96px);
+}
