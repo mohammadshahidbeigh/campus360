@@ -9,7 +9,7 @@ const ChatbotInput: React.FC = () => {
   };
 
   return (
-    <div className="chatbot-input-container relative flex items-center mt-2 bg-gray-100 p-2 rounded-lg">
+    <div className="chatbot-input-container relative flex items-center mt-6 bg-gray-100 p-2 rounded-lg">
       <input
         name="user-input"
         type="text"
@@ -26,7 +26,7 @@ const ChatbotInput: React.FC = () => {
         >
           <img
             src="src\assets\images\microphone.png"
-            className="microphone-icon w-5 h-5"
+            className="microphone-icon "
             alt="Microphone"
           />
         </button>
@@ -37,7 +37,7 @@ const ChatbotInput: React.FC = () => {
         >
           <img
             src="src\assets\images\send-btn-icon.png"
-            className="send-btn-icon w-5 h-5"
+            className="send-btn-icon "
             alt="Send"
           />
         </button>

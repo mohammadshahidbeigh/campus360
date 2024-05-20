@@ -9,7 +9,7 @@ const ChatbotConversation: React.FC = () => {
   const [conversation, setConversation] = useState<ConversationEntry[]>([
     {
       speaker: "ai",
-      text: "Hey there! Welcome to MIET Jammu's virtual assistant. How can I assist you today?",
+      text: "Hey there! Welcome to MIET virtual assistant. How can I assist you today?",
     },
   ]);
 
@@ -21,7 +21,7 @@ const ChatbotConversation: React.FC = () => {
       {conversation.map((entry, index) => (
         <div key={index} className={`speech speech-${entry.speaker} my-2`}>
           <div
-            className={`text ${
+            className={`text-sm ${
               entry.speaker === "ai"
                 ? "bg-blue-100 text-blue-800"
                 : "bg-green-100 text-green-800"

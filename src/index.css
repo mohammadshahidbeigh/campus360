@@ -5,6 +5,7 @@
 /* Custom Styles */
 .chatbot-container {
   width: 100%;
+  height: 100%;
 }
 
 .chatbot-header .logo {
@@ -18,7 +19,7 @@
 }
 
 .chatbot-input-container input {
-  width: calc(100% - 96px);
+  width: calc(100% - 96\px);
 }
 
 .App {
