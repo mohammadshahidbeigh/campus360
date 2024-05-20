@@ -26,7 +26,7 @@ const ChatbotInput: React.FC = () => {
         >
           <img
             src="src\assets\images\microphone.png"
-            className="microphone-icon "
+            className="microphone-icon w-5 h-5 "
             alt="Microphone"
           />
         </button>
@@ -37,7 +37,7 @@ const ChatbotInput: React.FC = () => {
         >
           <img
             src="src\assets\images\send-btn-icon.png"
-            className="send-btn-icon "
+            className="send-btn-icon w-5 h-5"
             alt="Send"
           />
         </button>
