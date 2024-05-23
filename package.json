@@ -10,8 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@langchain/community": "^0.2.1",
+    "@langchain/core": "^0.2.0",
+    "@langchain/openai": "^0.0.33",
+    "@supabase/supabase-js": "^2.43.4",
+    "dotenv": "^16.4.5",
+    "firebase": "^10.12.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-speech-recognition": "^3.10.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

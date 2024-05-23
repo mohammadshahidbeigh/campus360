@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { ConversationEntry } from "../types";
 
-interface ConversationEntry {
-  speaker: "ai" | "human";
-  text: string;
+interface ChatbotConversationProps {
+  conversation: ConversationEntry[];
 }
 
-const ChatbotConversation: React.FC = () => {
-  const [conversation, setConversation] = useState<ConversationEntry[]>([
-    {
-      speaker: "ai",
-      text: "Hey there! Welcome to MIET virtual assistant. How can I assist you today?",
-    },
-  ]);
+const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
+  conversation,
+}) => {
+  useEffect(() => {
+    const chatContainer = document.getElementById("chatbot-conversation");
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+  }, [conversation]);
 
   return (
     <div

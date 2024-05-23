@@ -2,13 +2,24 @@ import React, { useState } from "react";
 import ChatbotHeader from "./components/ChatbotHeader";
 import ChatbotConversation from "./components/ChatbotConversation";
 import ChatbotInput from "./components/ChatbotInput";
+import { ConversationEntry } from "./types";
 import "./index.css"; // Make sure to import your CSS file
 
 const App: React.FC = () => {
   const [isChatbotVisible, setIsChatbotVisible] = useState(false);
+  const [conversation, setConversation] = useState<ConversationEntry[]>([
+    {
+      speaker: "ai",
+      text: "Hey there! Welcome to MIET virtual assistant. How can I assist you today?",
+    },
+  ]);
 
   const toggleChatbotVisibility = () => {
     setIsChatbotVisible(!isChatbotVisible);
+  };
+
+  const addMessage = (message: ConversationEntry) => {
+    setConversation((prevConversation) => [...prevConversation, message]);
   };
 
   return (
@@ -45,8 +56,11 @@ const App: React.FC = () => {
           <main>
             <section className="chatbot-container">
               <ChatbotHeader />
-              <ChatbotConversation />
-              <ChatbotInput />
+              <ChatbotConversation conversation={conversation} />
+              <ChatbotInput
+                addMessage={addMessage}
+                conversation={conversation}
+              />
             </section>
           </main>
         </div>
