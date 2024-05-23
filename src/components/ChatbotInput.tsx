@@ -200,7 +200,7 @@ answer: `;
   }, [input]);
 
   return (
-    <div className="chatbot-input-container text-sm relative flex items-center mt-6 bg-gray-100 p-2 rounded-lg">
+    <div className="chatbot-input-container text-sm relative flex items-center mt-8 bg-gray-100 p-2 rounded-lg">
       <input
         id="user-input"
         name="user-input"
