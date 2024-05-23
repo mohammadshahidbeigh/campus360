@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ConversationEntry } from "../types";
 import { database } from "../firebase";
 import { ref, push } from "firebase/database";
@@ -26,8 +26,6 @@ const ChatbotInput: React.FC<ChatbotInputProps> = ({
 
   const openAIApiKey = "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";
   const llm = new ChatOpenAI({ openAIApiKey });
-
-  // const llm = new ChatOpenAI({ apiKey: process.env.REACT_APP_OPENAI_API_KEY });
 
   const standaloneQuestionTemplate = `Given some conversation history (if any) and a question, convert the question to a standalone question. 
 conversation history: {conv_history}
@@ -87,14 +85,19 @@ answer: `;
     setInput("");
 
     const response = await progressConversation(input);
-    const aiMessage: ConversationEntry = {
-      speaker: "ai",
-      text: response,
-    };
-    addMessage(aiMessage);
+
+    if (response) {
+      const aiMessage: ConversationEntry = {
+        speaker: "ai",
+        text: response,
+      };
+      addMessage(aiMessage);
+    }
   };
 
-  const progressConversation = async (question: string): Promise<string> => {
+  const progressConversation = async (
+    question: string
+  ): Promise<string | null> => {
     try {
       const conv_history = formatConvHistory(
         conversation.map((entry) => entry.text)
@@ -104,34 +107,102 @@ answer: `;
         conv_history: conv_history,
       });
 
-      console.log("Response from chain.invoke:", response);
+      const prompts = await generateSuggestivePrompts(question);
 
-      if (typeof response === "object" && "answer" in response) {
-        const answer = (response as { answer: string }).answer;
-        push(ref(database, "conversations"), {
-          question: question,
-          response: answer,
-        });
-        return answer;
-      } else if (typeof response === "string") {
-        // Handle case where response is a string
-        push(ref(database, "conversations"), {
-          question: question,
-          response: response,
-        });
-        return response;
-      } else {
-        throw new Error("Invalid response format from the chain.");
-      }
+      const newEntry: ConversationEntry = {
+        speaker: "ai",
+        text: response,
+        prompts: prompts.map((prompt) => ({ text: prompt, clicked: false })),
+      };
+
+      addMessage(newEntry);
+
+      push(ref(database, "conversations"), {
+        question: question,
+        response: response,
+      });
+
+      return null;
     } catch (error) {
       console.error("Error fetching OpenAI response:", error);
       return "Sorry, I couldn't get a response. Please try again.";
     }
   };
 
+  const generateSuggestivePrompts = async (
+    userInput: string
+  ): Promise<string[]> => {
+    const suggestivePromptsTemplate = `Based on the user input "{user_input}", generate suggestive few word prompts from the stored questions in the database that are similar to "{user_input}".`;
+    const suggestivePromptTemplate = PromptTemplate.fromTemplate(
+      suggestivePromptsTemplate
+    );
+
+    try {
+      const templateResult = await suggestivePromptTemplate.invoke({
+        user_input: userInput,
+      });
+
+      const promptString = templateResult.value;
+
+      const retrievedDocuments = await retriever.getRelevantDocuments(
+        promptString
+      );
+
+      const combinedDocuments = combineDocuments(retrievedDocuments);
+
+      return extractPrompts(combinedDocuments, userInput, 3);
+    } catch (error) {
+      console.error("Error in generateSuggestivePrompts:", error);
+      return [];
+    }
+  };
+
+  const extractPrompts = (
+    combinedText: string,
+    userInput: string,
+    limit: number
+  ): string[] => {
+    const questionRegex =
+      /(?:What|How|Where|When|Why|Which|Can|Do|Is|Are|Should)[^.?!]*\?/g;
+    const matches =
+      (combinedText.match(questionRegex) as RegExpMatchArray) || [];
+
+    const uniqueMatches = [...new Set(matches)].map((question) => {
+      if (!question.trim().endsWith("?")) {
+        question += "?";
+      }
+      return question.trim();
+    });
+
+    uniqueMatches.sort((a, b) => a.length - b.length);
+
+    return uniqueMatches.slice(0, limit);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        handleSubmit();
+      }
+    };
+
+    const inputField = document.getElementById("user-input");
+    if (inputField) {
+      inputField.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      if (inputField) {
+        inputField.removeEventListener("keydown", handleKeyDown);
+      }
+    };
+  }, [input]);
+
   return (
     <div className="chatbot-input-container text-sm relative flex items-center mt-6 bg-gray-100 p-2 rounded-lg">
       <input
+        id="user-input"
         name="user-input"
         type="text"
         placeholder="Send your message"
@@ -153,7 +224,7 @@ answer: `;
         </button>
         <button
           id="submit-btn"
-          className="bg-blue-500 text-white p-2 w-10 h-10 flex items-center justify-center rounded-lg"
+          className="p-2 w-10 h-10 flex items-center justify-center rounded-lg"
           onClick={handleSubmit}
         >
           <img

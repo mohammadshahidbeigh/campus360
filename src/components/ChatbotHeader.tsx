@@ -1,7 +1,11 @@
 import React from "react";
 import mietLogo from "../assets/images/miet-logo.png"; // Adjust the path according to your project structure
 
-const ChatbotHeader: React.FC = () => {
+interface ChatbotHeaderProps {
+  clearConversation: () => void;
+}
+
+const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({ clearConversation }) => {
   return (
     <div className="chatbot-header text-center mb-4">
       <img src={mietLogo} className="logo mx-auto mb-2" alt="MIET Logo" />
@@ -10,8 +14,9 @@ const ChatbotHeader: React.FC = () => {
         A virtual assistant from MIET, Jammu.
       </h2>
       <button
-        className="clear-btn bg-blue-500 text-white text-xs px-2 py-1 rounded mt-2 h-5px w-5px "
+        className="clear-btn bg-blue-500 text-white text-xs px-2 py-1 rounded mt-2 h-5px w-5px"
         id="clear-btn"
+        onClick={clearConversation}
       >
         Start Over
       </button>

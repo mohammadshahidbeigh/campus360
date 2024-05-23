@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ChatbotHeader from "./components/ChatbotHeader";
 import ChatbotConversation from "./components/ChatbotConversation";
 import ChatbotInput from "./components/ChatbotInput";
@@ -14,12 +14,36 @@ const App: React.FC = () => {
     },
   ]);
 
+  useEffect(() => {
+    const storedEntries = localStorage.getItem("conversationEntries");
+    if (storedEntries) {
+      setConversation(JSON.parse(storedEntries));
+    }
+  }, []);
+
   const toggleChatbotVisibility = () => {
     setIsChatbotVisible(!isChatbotVisible);
   };
 
   const addMessage = (message: ConversationEntry) => {
-    setConversation((prevConversation) => [...prevConversation, message]);
+    setConversation((prevConversation) => {
+      const newConversation = [...prevConversation, message];
+      localStorage.setItem(
+        "conversationEntries",
+        JSON.stringify(newConversation)
+      );
+      return newConversation;
+    });
+  };
+
+  const clearConversation = () => {
+    setConversation([
+      {
+        speaker: "ai",
+        text: "Hey there! Welcome to MIET virtual assistant. How can I assist you today?",
+      },
+    ]);
+    localStorage.removeItem("conversationEntries");
   };
 
   return (
@@ -55,7 +79,7 @@ const App: React.FC = () => {
         <div className="fixed bottom-20 right-4 w-80 h-[32rem] bg-white p-4 rounded-lg shadow-lg transition-transform transform-gpu z-50">
           <main>
             <section className="chatbot-container">
-              <ChatbotHeader />
+              <ChatbotHeader clearConversation={clearConversation} />
               <ChatbotConversation conversation={conversation} />
               <ChatbotInput
                 addMessage={addMessage}

@@ -17,20 +17,39 @@ const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
 
   return (
     <div
-      className="chatbot-conversation bg-gray-100 p-2 rounded-lg overflow-y-auto h-64"
+      className="chatbot-conversation p-2 rounded-lg overflow-y-auto h-64"
       id="chatbot-conversation"
     >
       {conversation.map((entry, index) => (
         <div key={index} className={`speech speech-${entry.speaker} my-2`}>
           <div
-            className={`text-sm ${
-              entry.speaker === "ai"
-                ? "bg-blue-100 text-blue-800"
-                : "bg-green-100 text-green-800"
+            className={`text-sm speech-bubble ${
+              entry.speaker === "ai" ? "speech-ai" : "speech-human"
             } p-2 rounded-lg`}
           >
             {entry.text}
           </div>
+          {entry.prompts && entry.prompts.length > 0 && (
+            <div className="chatbot-prompts-container">
+              {entry.prompts.map((prompt, promptIndex) => (
+                <button
+                  key={promptIndex}
+                  className={`suggestive-prompt-button ${
+                    prompt.clicked ? "clicked" : ""
+                  }`}
+                  onClick={() => {
+                    const userInputField = document.getElementById(
+                      "user-input"
+                    ) as HTMLInputElement;
+                    userInputField.value = prompt.text;
+                    document.getElementById("submit-btn")?.click();
+                  }}
+                >
+                  {prompt.text}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </div>

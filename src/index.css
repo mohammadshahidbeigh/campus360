@@ -46,3 +46,78 @@
   color: white;
   animation: cursor-blink 0.5s infinite;
 }
+
+/* Add your CSS styles here */
+
+.chatbot-conversation {
+  background-color: #f9f9f9;
+}
+
+.speech {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.speech-human {
+  align-items: flex-end;
+}
+
+.speech-ai {
+  align-items: flex-start;
+}
+
+.speech-bubble {
+  max-width: 75%;
+  padding: 10px;
+  border-radius: 15px;
+  font-size: 12px;
+}
+
+.speech-human .speech-bubble {
+  background-color: #0084ff;
+  color: white;
+}
+
+.speech-ai .speech-bubble {
+  background-color: #e5e5ea;
+  color: black;
+}
+
+.chatbot-prompts-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 5px;
+}
+
+.suggestive-prompt-button {
+  font-size: 10px;
+  background-color: #f1f1f1;
+  color: #007bff;
+  border: 1px solid #007bff;
+  border-radius: 15px;
+  padding: 6px 12px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.suggestive-prompt-button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.suggestive-prompt-button.clicked {
+  background-color: #007bff;
+  color: white;
+}
+
+/* stop ugly scroll bar on some browsers */
+.chatbot-conversation::-webkit-scrollbar {
+  display: none;
+}
+
+.chatbot-conversation::-moz-scrollbar {
+  display: none;
+}
