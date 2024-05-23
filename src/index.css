@@ -77,11 +77,13 @@
 .speech-human .speech-bubble {
   background-color: #0084ff;
   color: white;
+  border-top-right-radius: 0;
 }
 
 .speech-ai .speech-bubble {
   background-color: #e5e5ea;
   color: black;
+  border-top-left-radius: 0;
 }
 
 .chatbot-prompts-container {
@@ -96,7 +98,10 @@
   background-color: #f1f1f1;
   color: #007bff;
   border: 1px solid #007bff;
-  border-radius: 15px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 15px;
   padding: 6px 12px;
   margin-bottom: 5px;
   cursor: pointer;
