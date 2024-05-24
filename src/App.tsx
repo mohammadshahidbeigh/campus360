@@ -23,6 +23,7 @@ const App: React.FC = () => {
     {
       speaker: "ai",
       text: "Hey there! Welcome to MIET virtual assistant. How can I assist you today?",
+      timestamp: new Date().toLocaleTimeString(),
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,7 +41,10 @@ const App: React.FC = () => {
 
   const addMessage = useCallback((message: ConversationEntry) => {
     setConversation((prevConversation) => {
-      const newConversation = [...prevConversation, message];
+      const newConversation = [
+        ...prevConversation,
+        { ...message, timestamp: new Date().toLocaleTimeString() },
+      ];
       localStorage.setItem(
         "conversationEntries",
         JSON.stringify(newConversation)
@@ -54,6 +58,7 @@ const App: React.FC = () => {
       {
         speaker: "ai",
         text: "Hey there! Welcome to MIET virtual assistant. How can I assist you today?",
+        timestamp: new Date().toLocaleTimeString(),
       },
     ]);
     localStorage.removeItem("conversationEntries");
@@ -151,6 +156,7 @@ const App: React.FC = () => {
         const aiMessage: ConversationEntry = {
           speaker: "ai",
           text: response,
+          timestamp: new Date().toLocaleTimeString(), // Add timestamp here
           prompts: [], // Initialize with an empty array for prompts
         };
         addMessage(aiMessage);

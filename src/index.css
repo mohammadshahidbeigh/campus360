@@ -19,7 +19,7 @@
 }
 
 .chatbot-input-container input {
-  width: calc(100% - 96\px);
+  width: calc(100% - 96px);
 }
 
 .App {
@@ -71,6 +71,7 @@
   padding: 10px;
   border-radius: 15px;
   font-size: 12px;
+  position: relative;
 }
 
 .speech-human .speech-bubble {
@@ -83,6 +84,25 @@
   background-color: #e5e5ea;
   color: black;
   border-top-left-radius: 0;
+}
+
+.timestamp {
+  font-size: 0.6em;
+  text-align: right;
+}
+
+.speech-human .timestamp {
+  color: #999; /* Grey color for human messages */
+  align-self: flex-end;
+  margin-right: 0px; /* Adjust to align properly with the message bubble */
+  margin-top: 2px; /* Adjust to reduce space between message and timestamp */
+}
+
+.speech-ai .timestamp {
+  color: #999; /* Grey color for AI messages */
+  align-self: flex-start;
+  margin-left: 150px; /* Adjust to align properly with the message bubble */
+  margin-top: 2px; /* Adjust to reduce space between message and timestamp */
 }
 
 .chatbot-prompts-container {
@@ -111,11 +131,6 @@
   background-color: #007bff;
   color: white;
 }
-
-/* .suggestive-prompt-button.clicked {
-  background-color: #007bff;
-  color: white;
-} */
 
 /* stop ugly scroll bar on some browsers */
 .chatbot-conversation::-webkit-scrollbar {

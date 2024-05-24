@@ -38,8 +38,17 @@ const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
               entry.speaker === "ai" ? "speech-ai" : "speech-human"
             } p-2 rounded-lg`}
           >
-            {entry.text}
+            <div>{entry.text}</div>
           </div>
+          {entry.timestamp && (
+            <div
+              className={`timestamp ${
+                entry.speaker === "ai" ? "speech-ai" : "speech-human"
+              }`}
+            >
+              {entry.timestamp}
+            </div>
+          )}
           {entry.prompts && entry.prompts.length > 0 && (
             <div className="chatbot-prompts-container">
               {entry.prompts.map((prompt, promptIndex) => (
