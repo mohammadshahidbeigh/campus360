@@ -93,11 +93,11 @@ const App: React.FC = () => {
         standaloneQuestionTemplate
       );
 
-      const answerTemplate = `You are a supportive and dynamic conversational bot, designed to address any inquiries about MIET Jammu with the utmost precision. Your role involves analyzing the context and conversation history to provide the most accurate response. If the information needed to address the query isn't given in the context or conversation history, it's crucial to admit, "Sorry, I wasn't able to find any information about your question." At this point, kindly guide the user to reach out to info@mietjammu.in for further assistance. No hallucination, remember the focus on MIET Jammu. Always keep your tone friendly, approachable, and informative.
-    context: {context}
-    conversation history: {conv_history}
-    question: {question}
-    answer: `;
+      const answerTemplate = `You are a supportive and dynamic conversational bot, designed to address any inquiries about MIET Jammu with the utmost precision. Your role involves analyzing the context and conversation history to provide the most accurate response. If the information needed to address the query isn't given in the context or conversation history, it's crucial to admit, "Sorry, I wasn't able to find any information about your question." At this point, kindly guide the user to reach out to info@mietjammu.in for further assistance. No hallucination, remember the focus on MIET Jammu. If the user asks a question in any language, answer in the same language and tone. Always keep your tone friendly, approachable, and informative.
+      context: {context}
+      conversation history: {conv_history}
+      question: {question}
+      answer: `;
       const answerPrompt = PromptTemplate.fromTemplate(answerTemplate);
 
       const llm = new ChatOpenAI({
