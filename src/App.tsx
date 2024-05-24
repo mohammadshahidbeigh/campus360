@@ -244,7 +244,7 @@ const App: React.FC = () => {
             />
           </svg>
         ) : (
-          "Chat With MietBot 🤖"
+          "Chat with MietBot 🤖"
         )}
       </button>
 
