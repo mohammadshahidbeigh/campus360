@@ -28,7 +28,7 @@ const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
 
   return (
     <div
-      className="chatbot-conversation p-2 rounded-lg overflow-y-auto h-64"
+      className="chatbot-conversation p-2 rounded-lg overflow-y-auto h-80"
       id="chatbot-conversation"
     >
       {conversation.map((entry, index) => (

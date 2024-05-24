@@ -249,7 +249,7 @@ const App: React.FC = () => {
       </button>
 
       {isChatbotVisible && (
-        <div className="fixed bottom-20 right-4 w-80 h-[32rem] bg-white p-4 rounded-lg shadow-lg transition-transform transform-gpu z-50">
+        <div className="fixed bottom-20 right-4 w-80 h-[35rem] bg-white p-4 rounded-lg shadow-lg transition-transform transform-gpu z-50">
           <main>
             <section className="chatbot-container">
               <ChatbotHeader clearConversation={clearConversation} />
