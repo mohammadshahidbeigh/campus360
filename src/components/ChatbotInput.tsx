@@ -170,27 +170,37 @@ standalone question:`;
         required
       />
       <div className="absolute right-0 flex space-x-1 pr-2">
-        <button
-          id="microphone-btn"
-          className="p-2 w-10 h-10 flex items-center justify-center rounded-lg"
-        >
-          <img
-            src="src/assets/images/microphone.png"
-            className="microphone-icon w-5 h-5"
-            alt="Microphone"
-          />
-        </button>
-        <button
-          id="submit-btn"
-          className="p-2 w-10 h-10 flex items-center justify-center rounded-lg"
-          onClick={handleSubmit}
-        >
-          <img
-            src="src/assets/images/send-btn-icon.png"
-            className="send-btn-icon w-5 h-5"
-            alt="Send"
-          />
-        </button>
+        <div className="relative group">
+          <button
+            id="microphone-btn"
+            className="p-2 w-10 h-10 flex items-center justify-center rounded-lg"
+          >
+            <img
+              src="src/assets/images/microphone.png"
+              className="microphone-icon w-5 h-5"
+              alt="Microphone"
+            />
+          </button>
+          <div className="absolute bottom-full mb-1 hidden group-hover:block text-xs bg-gray-800 text-white py-1 px-2 rounded">
+            Click to voice
+          </div>
+        </div>
+        <div className="relative group">
+          <button
+            id="submit-btn"
+            className="p-2 w-10 h-10 flex items-center justify-center rounded-lg"
+            onClick={handleSubmit}
+          >
+            <img
+              src="src/assets/images/send-btn-icon.png"
+              className="send-btn-icon w-5 h-5"
+              alt="Send"
+            />
+          </button>
+          <div className="absolute bottom-full mb-1 hidden group-hover:block text-xs bg-gray-800 text-white py-1 px-2 rounded">
+            Send message
+          </div>
+        </div>
       </div>
     </div>
   );
