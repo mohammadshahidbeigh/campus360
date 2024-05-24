@@ -104,7 +104,7 @@ const App: React.FC = () => {
       const answerPrompt = PromptTemplate.fromTemplate(answerTemplate);
 
       const llm = new ChatOpenAI({
-        openAIApiKey: "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",
+        openAIApiKey: "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",
       });
 
       const standaloneQuestionChain = standaloneQuestionPrompt
