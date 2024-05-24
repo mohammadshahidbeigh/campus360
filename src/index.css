@@ -140,7 +140,7 @@
 .speech-ai .timestamp {
   color: #999; /* Grey color for AI messages */
   align-self: flex-start;
-  margin-left: 150px; /* Adjust to align properly with the message bubble */
+  margin-left: 160px; /* Adjust to align properly with the message bubble */
   margin-top: 2px; /* Adjust to reduce space between message and timestamp */
 }
 
