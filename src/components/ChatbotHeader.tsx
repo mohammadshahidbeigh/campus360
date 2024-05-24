@@ -7,14 +7,14 @@ interface ChatbotHeaderProps {
 
 const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({ clearConversation }) => {
   return (
-    <div className="chatbot-header text-center mb-4">
-      <img src={mietLogo} className="logo mx-auto mb-2" alt="MIET Logo" />
-      <h1 className="text-lg font-bold">MIETBOT</h1>
-      <h2 className="text-xs text-gray-600">
+    <div className="chatbot-header text-center">
+      <img src={mietLogo} className="logo mx-auto" alt="MIET Logo" />
+      <h1 className="text-lg font-bold text-white">MIETBOT</h1>
+      <h2 className="text-xs text-white">
         A virtual assistant from MIET, Jammu.
       </h2>
       <button
-        className="clear-btn bg-blue-500 text-white text-xs px-2 py-1 rounded mt-2 h-5px w-5px"
+        className="clear-btn bg-white text-blue-500 text-xs px-2 py-1 rounded mt-2"
         id="clear-btn"
         onClick={clearConversation}
       >

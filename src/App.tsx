@@ -255,25 +255,29 @@ const App: React.FC = () => {
       </button>
 
       {isChatbotVisible && (
-        <div className="fixed bottom-20 right-4 w-80 h-[35rem] bg-white p-4 rounded-lg shadow-lg transition-transform transform-gpu z-50">
-          <main>
-            <section className="chatbot-container">
-              <ChatbotHeader clearConversation={clearConversation} />
-              <ChatbotConversation
-                conversation={conversation}
-                handleSuggestivePromptClick={handleSuggestivePromptClick}
-                isLoading={isLoading} // Pass loading state
-              />
-              <ChatbotInput
-                addMessage={addMessage}
-                conversation={conversation}
-                generateSuggestivePrompts={generateSuggestivePrompts}
-                setIsLoading={setIsLoading} // Pass setLoading function
-                isLoading={isLoading} // Pass loading state
-              />
-            </section>
-          </main>
-        </div>
+        <>
+          <div className="fixed bottom-20 right-4 w-80 h-[36rem] bg-white rounded-lg shadow-lg transition-transform transform-gpu z-50">
+            <ChatbotHeader clearConversation={clearConversation} />
+          </div>
+          <div className="fixed bottom-20 right-4 w-80 bg-white p-4 rounded-lg shadow-lg transition-transform transform-gpu z-50">
+            <main>
+              <section className="chatbot-container">
+                <ChatbotConversation
+                  conversation={conversation}
+                  handleSuggestivePromptClick={handleSuggestivePromptClick}
+                  isLoading={isLoading} // Pass loading state
+                />
+                <ChatbotInput
+                  addMessage={addMessage}
+                  conversation={conversation}
+                  generateSuggestivePrompts={generateSuggestivePrompts}
+                  setIsLoading={setIsLoading} // Pass setLoading function
+                  isLoading={isLoading} // Pass loading state
+                />
+              </section>
+            </main>
+          </div>
+        </>
       )}
     </div>
   );

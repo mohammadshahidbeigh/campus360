@@ -8,11 +8,50 @@
   height: 100%;
 }
 
-.chatbot-header .logo {
-  width: 40px;
-  height: 40px;
+.chatbot-header {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 123, 255, 1) 0%,
+    rgba(0, 184, 255, 1) 100%
+  );
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  border-radius: 2%;
+  padding: 10px 0;
 }
 
+.chatbot-header .logo {
+  width: 70px;
+  height: 70px;
+}
+
+.chatbot-header h1 {
+  font-size: 1.2em;
+  color: white;
+  margin: 0;
+}
+
+.chatbot-header h2 {
+  color: white;
+  margin: 0;
+  font-size: 0.8em;
+}
+
+.chatbot-header .clear-btn {
+  margin-top: 5px;
+  padding: 4px 6px;
+  background-color: white;
+  color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.7em;
+}
+
+.chatbot-header .clear-btn:hover {
+  background-color: #007bff;
+  color: white;
+}
 .chatbot-conversation {
   max-height: 350px;
   overflow-y: auto;
