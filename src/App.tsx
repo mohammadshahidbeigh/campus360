@@ -25,6 +25,7 @@ const App: React.FC = () => {
       text: "Hey there! Welcome to MIET virtual assistant. How can I assist you today?",
     },
   ]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const storedEntries = localStorage.getItem("conversationEntries");
@@ -64,6 +65,7 @@ const App: React.FC = () => {
       text: prompt,
     };
     addMessage(userMessage);
+    setIsLoading(true);
 
     // Trigger the conversation progression
     await progressConversation(prompt);
@@ -81,6 +83,7 @@ const App: React.FC = () => {
       }
       return [...prevConversation];
     });
+    setIsLoading(false);
   };
 
   const progressConversation = useCallback(
@@ -253,11 +256,13 @@ const App: React.FC = () => {
               <ChatbotConversation
                 conversation={conversation}
                 handleSuggestivePromptClick={handleSuggestivePromptClick}
+                isLoading={isLoading} // Pass loading state
               />
               <ChatbotInput
                 addMessage={addMessage}
                 conversation={conversation}
                 generateSuggestivePrompts={generateSuggestivePrompts}
+                setIsLoading={setIsLoading} // Pass setLoading function
               />
             </section>
           </main>

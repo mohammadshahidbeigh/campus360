@@ -17,12 +17,14 @@ interface ChatbotInputProps {
   addMessage: (message: ConversationEntry) => void;
   conversation: ConversationEntry[];
   generateSuggestivePrompts: (userInput: string) => Promise<string[]>;
+  setIsLoading: (isLoading: boolean) => void; // Add setLoading function prop
 }
 
 const ChatbotInput: React.FC<ChatbotInputProps> = ({
   addMessage,
   conversation,
   generateSuggestivePrompts,
+  setIsLoading, // Use setLoading function
 }) => {
   const [input, setInput] = useState<string>("");
 
@@ -79,6 +81,7 @@ standalone question:`;
   const progressConversation = useCallback(
     async (question: string): Promise<string | null> => {
       try {
+        setIsLoading(true);
         const conv_history = formatConvHistory(
           conversation.map((entry) => entry.text)
         );
@@ -102,13 +105,15 @@ standalone question:`;
           response: response,
         });
 
+        setIsLoading(false);
         return null;
       } catch (error) {
         console.error("Error fetching OpenAI response:", error);
+        setIsLoading(false);
         return "Sorry, I couldn't get a response. Please try again.";
       }
     },
-    [conversation, addMessage, chain, generateSuggestivePrompts]
+    [conversation, addMessage, chain, generateSuggestivePrompts, setIsLoading]
   );
 
   const handleSubmit = useCallback(async () => {

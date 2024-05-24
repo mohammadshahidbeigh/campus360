@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ConversationEntry } from "../types";
 
 interface ChatbotConversationProps {
   conversation: ConversationEntry[];
   handleSuggestivePromptClick: (prompt: string) => void;
+  isLoading: boolean; // Add loading state as a prop
 }
 
 const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
   conversation,
   handleSuggestivePromptClick,
+  isLoading, // Use loading state
 }) => {
   const [clickedPrompts, setClickedPrompts] = useState<string[]>([]);
 
@@ -55,6 +57,11 @@ const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
           )}
         </div>
       ))}
+      {isLoading && ( // Conditionally render loading indicator
+        <div className="speech speech-ai my-2">
+          <div className="text-sm speech-bubble speech-ai p-2 rounded-lg blinking-cursor"></div>
+        </div>
+      )}
     </div>
   );
 };

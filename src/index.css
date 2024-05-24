@@ -40,10 +40,11 @@
     opacity: 0;
   }
 }
+
 .blinking-cursor::after {
   content: "●";
   font-size: 24px;
-  color: white;
+  color: black;
   animation: cursor-blink 0.5s infinite;
 }
 
