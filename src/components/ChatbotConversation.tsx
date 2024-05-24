@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ConversationEntry } from "../types";
 
 interface ChatbotConversationProps {
@@ -10,12 +10,19 @@ const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
   conversation,
   handleSuggestivePromptClick,
 }) => {
+  const [clickedPrompts, setClickedPrompts] = useState<string[]>([]);
+
   useEffect(() => {
     const chatContainer = document.getElementById("chatbot-conversation");
     if (chatContainer) {
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
   }, [conversation]);
+
+  const handleClick = (prompt: string) => {
+    setClickedPrompts((prev) => [...prev, prompt]);
+    handleSuggestivePromptClick(prompt);
+  };
 
   return (
     <div
@@ -37,9 +44,9 @@ const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
                 <button
                   key={promptIndex}
                   className={`suggestive-prompt-button ${
-                    prompt.clicked ? "clicked" : ""
+                    clickedPrompts.includes(prompt.text) ? "clicked" : ""
                   }`}
-                  onClick={() => handleSuggestivePromptClick(prompt.text)}
+                  onClick={() => handleClick(prompt.text)}
                 >
                   {prompt.text}
                 </button>

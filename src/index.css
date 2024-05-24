@@ -113,10 +113,10 @@
   color: white;
 }
 
-.suggestive-prompt-button.clicked {
+/* .suggestive-prompt-button.clicked {
   background-color: #007bff;
   color: white;
-}
+} */
 
 /* stop ugly scroll bar on some browsers */
 .chatbot-conversation::-webkit-scrollbar {

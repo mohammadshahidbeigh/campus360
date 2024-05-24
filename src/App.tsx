@@ -167,21 +167,23 @@ const App: React.FC = () => {
   const generateSuggestivePrompts = async (
     userInput: string
   ): Promise<string[]> => {
-    const suggestivePromptsTemplate = `Based on the user input "{user_input}", generate suggestive few word prompts from the stored questions in the database that are similar to "{user_input}".`;
-    const suggestivePromptTemplate = PromptTemplate.fromTemplate(
-      suggestivePromptsTemplate
-    );
+    // Handling casual greetings
+    const greetings = ["hey", "hello", "hi", "hii"];
+    if (greetings.includes(userInput.toLowerCase())) {
+      return [
+        "When was MIET established?",
+        "Tell me about MIET's history.",
+        "What courses are available at MIET?",
+        "How can I apply to MIET?",
+      ];
+    }
 
     try {
-      const templateResult = await suggestivePromptTemplate.invoke({
-        user_input: userInput,
-      });
+      // Split input into keywords and phrases to enhance search relevance
+      const keywords = userInput.split(/\s+/).filter((word) => word.length > 2);
 
-      const promptString = templateResult.value;
-
-      const retrievedDocuments = await retriever.getRelevantDocuments(
-        promptString
-      );
+      // Use keywords to retrieve documents
+      const retrievedDocuments = await retriever.invoke(keywords.join(" "));
 
       const combinedDocuments = combineDocuments(retrievedDocuments);
 
