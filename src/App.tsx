@@ -263,6 +263,7 @@ const App: React.FC = () => {
                 conversation={conversation}
                 generateSuggestivePrompts={generateSuggestivePrompts}
                 setIsLoading={setIsLoading} // Pass setLoading function
+                isLoading={isLoading} // Pass loading state
               />
             </section>
           </main>

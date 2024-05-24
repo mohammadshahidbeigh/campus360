@@ -59,7 +59,7 @@ const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
       ))}
       {isLoading && ( // Conditionally render loading indicator
         <div className="speech speech-ai my-2">
-          <div className="text-sm speech-bubble speech-ai p-2 rounded-lg blinking-cursor"></div>
+          <div className="text-sm p-2 rounded-lg blinking-cursor"></div>
         </div>
       )}
     </div>

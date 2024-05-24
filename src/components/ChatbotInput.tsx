@@ -18,6 +18,7 @@ interface ChatbotInputProps {
   conversation: ConversationEntry[];
   generateSuggestivePrompts: (userInput: string) => Promise<string[]>;
   setIsLoading: (isLoading: boolean) => void; // Add setLoading function prop
+  isLoading: boolean; // Add loading state prop
 }
 
 const ChatbotInput: React.FC<ChatbotInputProps> = ({
@@ -25,6 +26,7 @@ const ChatbotInput: React.FC<ChatbotInputProps> = ({
   conversation,
   generateSuggestivePrompts,
   setIsLoading, // Use setLoading function
+  isLoading, // Use loading state
 }) => {
   const [input, setInput] = useState<string>("");
 
@@ -117,7 +119,7 @@ standalone question:`;
   );
 
   const handleSubmit = useCallback(async () => {
-    if (input.trim() === "") return;
+    if (input.trim() === "" || isLoading) return; // Check isLoading state
 
     const userMessage: ConversationEntry = {
       speaker: "human",
@@ -135,7 +137,7 @@ standalone question:`;
       };
       addMessage(aiMessage);
     }
-  }, [input, addMessage, progressConversation]);
+  }, [input, addMessage, progressConversation, isLoading]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -184,6 +186,7 @@ standalone question:`;
           id="submit-btn"
           className="p-2 w-10 h-10 flex items-center justify-center rounded-lg"
           onClick={handleSubmit}
+          disabled={isLoading} // Disable button when loading
         >
           <img
             src="src/assets/images/send-btn-icon.png"
