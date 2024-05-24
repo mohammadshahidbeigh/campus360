@@ -163,7 +163,7 @@ standalone question:`;
   }, [handleSubmit]);
 
   return (
-    <div className="chatbot-input-container text-sm relative flex items-center mt-10 bg-gray-100 p-2 rounded-lg">
+    <div className="chatbot-input-container text-sm relative flex items-center mt-4 bg-gray-100 p-2 rounded-lg">
       <input
         id="user-input"
         name="user-input"
