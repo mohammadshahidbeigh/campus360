@@ -58,7 +58,7 @@ const App: React.FC = () => {
     localStorage.removeItem("conversationEntries");
   };
 
-  const handleSuggestivePromptClick = (prompt: string) => {
+  const handleSuggestivePromptClick = async (prompt: string) => {
     const userMessage: ConversationEntry = {
       speaker: "human",
       text: prompt,
@@ -66,7 +66,21 @@ const App: React.FC = () => {
     addMessage(userMessage);
 
     // Trigger the conversation progression
-    progressConversation(prompt);
+    await progressConversation(prompt);
+
+    // Generate and add new suggestive prompts after processing the clicked prompt
+    const newPrompts = await generateSuggestivePrompts(prompt);
+    setConversation((prevConversation) => {
+      const lastMessageIndex = prevConversation.length - 1;
+      const lastMessage = prevConversation[lastMessageIndex];
+      if (lastMessage && lastMessage.speaker === "ai") {
+        lastMessage.prompts = newPrompts.map((newPrompt) => ({
+          text: newPrompt,
+          clicked: false,
+        }));
+      }
+      return [...prevConversation];
+    });
   };
 
   const progressConversation = useCallback(
@@ -122,56 +136,6 @@ const App: React.FC = () => {
         answerChain,
       ]);
 
-      const generateSuggestivePrompts = async (
-        userInput: string
-      ): Promise<string[]> => {
-        const suggestivePromptsTemplate = `Based on the user input "{user_input}", generate suggestive few word prompts from the stored questions in the database that are similar to "{user_input}".`;
-        const suggestivePromptTemplate = PromptTemplate.fromTemplate(
-          suggestivePromptsTemplate
-        );
-
-        try {
-          const templateResult = await suggestivePromptTemplate.invoke({
-            user_input: userInput,
-          });
-
-          const promptString = templateResult.value;
-
-          const retrievedDocuments = await retriever.getRelevantDocuments(
-            promptString
-          );
-
-          const combinedDocuments = combineDocuments(retrievedDocuments);
-
-          return extractPrompts(combinedDocuments, userInput, 3);
-        } catch (error) {
-          console.error("Error in generateSuggestivePrompts:", error);
-          return [];
-        }
-      };
-
-      const extractPrompts = (
-        combinedText: string,
-        userInput: string,
-        limit: number
-      ): string[] => {
-        const questionRegex =
-          /(?:What|How|Where|When|Why|Which|Can|Do|Is|Are|Should)[^.?!]*\?/g;
-        const matches =
-          (combinedText.match(questionRegex) as RegExpMatchArray) || [];
-
-        const uniqueMatches = [...new Set(matches)].map((question) => {
-          if (!question.trim().endsWith("?")) {
-            question += "?";
-          }
-          return question.trim();
-        });
-
-        uniqueMatches.sort((a, b) => a.length - b.length);
-
-        return uniqueMatches.slice(0, limit);
-      };
-
       try {
         const conv_history = formatConvHistory(
           conversation.map((entry) => entry.text)
@@ -181,12 +145,10 @@ const App: React.FC = () => {
           conv_history: conv_history,
         });
 
-        const prompts = await generateSuggestivePrompts(input);
-
         const aiMessage: ConversationEntry = {
           speaker: "ai",
           text: response,
-          prompts: prompts.map((prompt) => ({ text: prompt, clicked: false })),
+          prompts: [], // Initialize with an empty array for prompts
         };
         addMessage(aiMessage);
 
@@ -201,6 +163,56 @@ const App: React.FC = () => {
     },
     [conversation, addMessage]
   );
+
+  const generateSuggestivePrompts = async (
+    userInput: string
+  ): Promise<string[]> => {
+    const suggestivePromptsTemplate = `Based on the user input "{user_input}", generate suggestive few word prompts from the stored questions in the database that are similar to "{user_input}".`;
+    const suggestivePromptTemplate = PromptTemplate.fromTemplate(
+      suggestivePromptsTemplate
+    );
+
+    try {
+      const templateResult = await suggestivePromptTemplate.invoke({
+        user_input: userInput,
+      });
+
+      const promptString = templateResult.value;
+
+      const retrievedDocuments = await retriever.getRelevantDocuments(
+        promptString
+      );
+
+      const combinedDocuments = combineDocuments(retrievedDocuments);
+
+      return extractPrompts(combinedDocuments, userInput, 3);
+    } catch (error) {
+      console.error("Error in generateSuggestivePrompts:", error);
+      return [];
+    }
+  };
+
+  const extractPrompts = (
+    combinedText: string,
+    userInput: string,
+    limit: number
+  ): string[] => {
+    const questionRegex =
+      /(?:What|How|Where|When|Why|Which|Can|Do|Is|Are|Should)[^.?!]*\?/g;
+    const matches =
+      (combinedText.match(questionRegex) as RegExpMatchArray) || [];
+
+    const uniqueMatches = [...new Set(matches)].map((question) => {
+      if (!question.trim().endsWith("?")) {
+        question += "?";
+      }
+      return question.trim();
+    });
+
+    uniqueMatches.sort((a, b) => a.length - b.length);
+
+    return uniqueMatches.slice(0, limit);
+  };
 
   return (
     <div
@@ -243,6 +255,7 @@ const App: React.FC = () => {
               <ChatbotInput
                 addMessage={addMessage}
                 conversation={conversation}
+                generateSuggestivePrompts={generateSuggestivePrompts}
               />
             </section>
           </main>

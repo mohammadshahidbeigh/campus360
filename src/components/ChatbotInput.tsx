@@ -16,11 +16,13 @@ import {
 interface ChatbotInputProps {
   addMessage: (message: ConversationEntry) => void;
   conversation: ConversationEntry[];
+  generateSuggestivePrompts: (userInput: string) => Promise<string[]>;
 }
 
 const ChatbotInput: React.FC<ChatbotInputProps> = ({
   addMessage,
   conversation,
+  generateSuggestivePrompts,
 }) => {
   const [input, setInput] = useState<string>("");
 
@@ -73,35 +75,6 @@ answer: `;
     },
     answerChain,
   ]);
-
-  const generateSuggestivePrompts = useCallback(
-    async (userInput: string): Promise<string[]> => {
-      const suggestivePromptsTemplate = `Based on the user input "{user_input}", generate suggestive few word prompts from the stored questions in the database that are similar to "{user_input}".`;
-      const suggestivePromptTemplate = PromptTemplate.fromTemplate(
-        suggestivePromptsTemplate
-      );
-
-      try {
-        const templateResult = await suggestivePromptTemplate.invoke({
-          user_input: userInput,
-        });
-
-        const promptString = templateResult.value;
-
-        const retrievedDocuments = await retriever.getRelevantDocuments(
-          promptString
-        );
-
-        const combinedDocuments = combineDocuments(retrievedDocuments);
-
-        return extractPrompts(combinedDocuments, userInput, 3);
-      } catch (error) {
-        console.error("Error in generateSuggestivePrompts:", error);
-        return [];
-      }
-    },
-    []
-  );
 
   const progressConversation = useCallback(
     async (question: string): Promise<string | null> => {
@@ -158,28 +131,6 @@ answer: `;
       addMessage(aiMessage);
     }
   }, [input, addMessage, progressConversation]);
-
-  const extractPrompts = (
-    combinedText: string,
-    userInput: string,
-    limit: number
-  ): string[] => {
-    const questionRegex =
-      /(?:What|How|Where|When|Why|Which|Can|Do|Is|Are|Should)[^.?!]*\?/g;
-    const matches =
-      (combinedText.match(questionRegex) as RegExpMatchArray) || [];
-
-    const uniqueMatches = [...new Set(matches)].map((question) => {
-      if (!question.trim().endsWith("?")) {
-        question += "?";
-      }
-      return question.trim();
-    });
-
-    uniqueMatches.sort((a, b) => a.length - b.length);
-
-    return uniqueMatches.slice(0, limit);
-  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
