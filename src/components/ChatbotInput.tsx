@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ConversationEntry } from "../types";
 import { database } from "../firebase";
 import { ref, push } from "firebase/database";
@@ -74,7 +74,71 @@ answer: `;
     answerChain,
   ]);
 
-  const handleSubmit = async () => {
+  const generateSuggestivePrompts = useCallback(
+    async (userInput: string): Promise<string[]> => {
+      const suggestivePromptsTemplate = `Based on the user input "{user_input}", generate suggestive few word prompts from the stored questions in the database that are similar to "{user_input}".`;
+      const suggestivePromptTemplate = PromptTemplate.fromTemplate(
+        suggestivePromptsTemplate
+      );
+
+      try {
+        const templateResult = await suggestivePromptTemplate.invoke({
+          user_input: userInput,
+        });
+
+        const promptString = templateResult.value;
+
+        const retrievedDocuments = await retriever.getRelevantDocuments(
+          promptString
+        );
+
+        const combinedDocuments = combineDocuments(retrievedDocuments);
+
+        return extractPrompts(combinedDocuments, userInput, 3);
+      } catch (error) {
+        console.error("Error in generateSuggestivePrompts:", error);
+        return [];
+      }
+    },
+    []
+  );
+
+  const progressConversation = useCallback(
+    async (question: string): Promise<string | null> => {
+      try {
+        const conv_history = formatConvHistory(
+          conversation.map((entry) => entry.text)
+        );
+        const response = await chain.invoke({
+          question: question,
+          conv_history: conv_history,
+        });
+
+        const prompts = await generateSuggestivePrompts(question);
+
+        const newEntry: ConversationEntry = {
+          speaker: "ai",
+          text: response,
+          prompts: prompts.map((prompt) => ({ text: prompt, clicked: false })),
+        };
+
+        addMessage(newEntry);
+
+        push(ref(database, "conversations"), {
+          question: question,
+          response: response,
+        });
+
+        return null;
+      } catch (error) {
+        console.error("Error fetching OpenAI response:", error);
+        return "Sorry, I couldn't get a response. Please try again.";
+      }
+    },
+    [conversation, addMessage, chain, generateSuggestivePrompts]
+  );
+
+  const handleSubmit = useCallback(async () => {
     if (input.trim() === "") return;
 
     const userMessage: ConversationEntry = {
@@ -93,69 +157,7 @@ answer: `;
       };
       addMessage(aiMessage);
     }
-  };
-
-  const progressConversation = async (
-    question: string
-  ): Promise<string | null> => {
-    try {
-      const conv_history = formatConvHistory(
-        conversation.map((entry) => entry.text)
-      );
-      const response = await chain.invoke({
-        question: question,
-        conv_history: conv_history,
-      });
-
-      const prompts = await generateSuggestivePrompts(question);
-
-      const newEntry: ConversationEntry = {
-        speaker: "ai",
-        text: response,
-        prompts: prompts.map((prompt) => ({ text: prompt, clicked: false })),
-      };
-
-      addMessage(newEntry);
-
-      push(ref(database, "conversations"), {
-        question: question,
-        response: response,
-      });
-
-      return null;
-    } catch (error) {
-      console.error("Error fetching OpenAI response:", error);
-      return "Sorry, I couldn't get a response. Please try again.";
-    }
-  };
-
-  const generateSuggestivePrompts = async (
-    userInput: string
-  ): Promise<string[]> => {
-    const suggestivePromptsTemplate = `Based on the user input "{user_input}", generate suggestive few word prompts from the stored questions in the database that are similar to "{user_input}".`;
-    const suggestivePromptTemplate = PromptTemplate.fromTemplate(
-      suggestivePromptsTemplate
-    );
-
-    try {
-      const templateResult = await suggestivePromptTemplate.invoke({
-        user_input: userInput,
-      });
-
-      const promptString = templateResult.value;
-
-      const retrievedDocuments = await retriever.getRelevantDocuments(
-        promptString
-      );
-
-      const combinedDocuments = combineDocuments(retrievedDocuments);
-
-      return extractPrompts(combinedDocuments, userInput, 3);
-    } catch (error) {
-      console.error("Error in generateSuggestivePrompts:", error);
-      return [];
-    }
-  };
+  }, [input, addMessage, progressConversation]);
 
   const extractPrompts = (
     combinedText: string,
@@ -197,7 +199,7 @@ answer: `;
         inputField.removeEventListener("keydown", handleKeyDown);
       }
     };
-  }, [input]);
+  }, [handleSubmit]);
 
   return (
     <div className="chatbot-input-container text-sm relative flex items-center mt-8 bg-gray-100 p-2 rounded-lg">

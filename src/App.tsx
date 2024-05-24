@@ -1,8 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ChatbotHeader from "./components/ChatbotHeader";
 import ChatbotConversation from "./components/ChatbotConversation";
 import ChatbotInput from "./components/ChatbotInput";
 import { ConversationEntry } from "./types";
+import { ChatOpenAI } from "@langchain/openai";
+import { PromptTemplate } from "@langchain/core/prompts";
+import { StringOutputParser } from "@langchain/core/output_parsers";
+import { retriever } from "./utils/retriever";
+import { combineDocuments } from "./utils/combineDocuments";
+import { formatConvHistory } from "./utils/formatConvHistory";
+import { ref, push } from "firebase/database";
+import { database } from "./firebase";
+import {
+  RunnablePassthrough,
+  RunnableSequence,
+} from "@langchain/core/runnables";
 import "./index.css"; // Make sure to import your CSS file
 
 const App: React.FC = () => {
@@ -25,7 +37,7 @@ const App: React.FC = () => {
     setIsChatbotVisible(!isChatbotVisible);
   };
 
-  const addMessage = (message: ConversationEntry) => {
+  const addMessage = useCallback((message: ConversationEntry) => {
     setConversation((prevConversation) => {
       const newConversation = [...prevConversation, message];
       localStorage.setItem(
@@ -34,7 +46,7 @@ const App: React.FC = () => {
       );
       return newConversation;
     });
-  };
+  }, []);
 
   const clearConversation = () => {
     setConversation([
@@ -45,6 +57,150 @@ const App: React.FC = () => {
     ]);
     localStorage.removeItem("conversationEntries");
   };
+
+  const handleSuggestivePromptClick = (prompt: string) => {
+    const userMessage: ConversationEntry = {
+      speaker: "human",
+      text: prompt,
+    };
+    addMessage(userMessage);
+
+    // Trigger the conversation progression
+    progressConversation(prompt);
+  };
+
+  const progressConversation = useCallback(
+    async (input: string) => {
+      const standaloneQuestionTemplate = `Given some conversation history (if any) and a question, convert the question to a standalone question. 
+    conversation history: {conv_history}
+    question: {question} 
+    standalone question:`;
+      const standaloneQuestionPrompt = PromptTemplate.fromTemplate(
+        standaloneQuestionTemplate
+      );
+
+      const answerTemplate = `You are a supportive and dynamic conversational bot, designed to address any inquiries about MIET Jammu with the utmost precision. Your role involves analyzing the context and conversation history to provide the most accurate response. If the information needed to address the query isn't given in the context or conversation history, it's crucial to admit, "Sorry, I wasn't able to find any information about your question." At this point, kindly guide the user to reach out to info@mietjammu.in for further assistance. No hallucination, remember the focus on MIET Jammu. Always keep your tone friendly, approachable, and informative.
+    context: {context}
+    conversation history: {conv_history}
+    question: {question}
+    answer: `;
+      const answerPrompt = PromptTemplate.fromTemplate(answerTemplate);
+
+      const llm = new ChatOpenAI({
+        openAIApiKey: "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",
+      });
+
+      const standaloneQuestionChain = standaloneQuestionPrompt
+        .pipe(llm)
+        .pipe(new StringOutputParser());
+      const retrieverChain = RunnableSequence.from([
+        (prevResult: { standalone_question: string }) =>
+          prevResult.standalone_question,
+        retriever,
+        combineDocuments,
+      ]);
+      const answerChain = answerPrompt.pipe(llm).pipe(new StringOutputParser());
+
+      const chain = RunnableSequence.from([
+        {
+          standalone_question: standaloneQuestionChain,
+          original_input: new RunnablePassthrough(),
+        },
+        {
+          context: retrieverChain,
+          question: ({
+            original_input,
+          }: {
+            original_input: { question: string };
+          }) => original_input.question,
+          conv_history: ({
+            original_input,
+          }: {
+            original_input: { conv_history: string };
+          }) => original_input.conv_history,
+        },
+        answerChain,
+      ]);
+
+      const generateSuggestivePrompts = async (
+        userInput: string
+      ): Promise<string[]> => {
+        const suggestivePromptsTemplate = `Based on the user input "{user_input}", generate suggestive few word prompts from the stored questions in the database that are similar to "{user_input}".`;
+        const suggestivePromptTemplate = PromptTemplate.fromTemplate(
+          suggestivePromptsTemplate
+        );
+
+        try {
+          const templateResult = await suggestivePromptTemplate.invoke({
+            user_input: userInput,
+          });
+
+          const promptString = templateResult.value;
+
+          const retrievedDocuments = await retriever.getRelevantDocuments(
+            promptString
+          );
+
+          const combinedDocuments = combineDocuments(retrievedDocuments);
+
+          return extractPrompts(combinedDocuments, userInput, 3);
+        } catch (error) {
+          console.error("Error in generateSuggestivePrompts:", error);
+          return [];
+        }
+      };
+
+      const extractPrompts = (
+        combinedText: string,
+        userInput: string,
+        limit: number
+      ): string[] => {
+        const questionRegex =
+          /(?:What|How|Where|When|Why|Which|Can|Do|Is|Are|Should)[^.?!]*\?/g;
+        const matches =
+          (combinedText.match(questionRegex) as RegExpMatchArray) || [];
+
+        const uniqueMatches = [...new Set(matches)].map((question) => {
+          if (!question.trim().endsWith("?")) {
+            question += "?";
+          }
+          return question.trim();
+        });
+
+        uniqueMatches.sort((a, b) => a.length - b.length);
+
+        return uniqueMatches.slice(0, limit);
+      };
+
+      try {
+        const conv_history = formatConvHistory(
+          conversation.map((entry) => entry.text)
+        );
+        const response = await chain.invoke({
+          question: input,
+          conv_history: conv_history,
+        });
+
+        const prompts = await generateSuggestivePrompts(input);
+
+        const aiMessage: ConversationEntry = {
+          speaker: "ai",
+          text: response,
+          prompts: prompts.map((prompt) => ({ text: prompt, clicked: false })),
+        };
+        addMessage(aiMessage);
+
+        // Push conversation to Firebase
+        push(ref(database, "conversations"), {
+          question: input,
+          response: response,
+        });
+      } catch (error) {
+        console.error("Error fetching OpenAI response:", error);
+      }
+    },
+    [conversation, addMessage]
+  );
 
   return (
     <div
@@ -80,7 +236,10 @@ const App: React.FC = () => {
           <main>
             <section className="chatbot-container">
               <ChatbotHeader clearConversation={clearConversation} />
-              <ChatbotConversation conversation={conversation} />
+              <ChatbotConversation
+                conversation={conversation}
+                handleSuggestivePromptClick={handleSuggestivePromptClick}
+              />
               <ChatbotInput
                 addMessage={addMessage}
                 conversation={conversation}

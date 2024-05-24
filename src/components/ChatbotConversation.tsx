@@ -3,10 +3,12 @@ import { ConversationEntry } from "../types";
 
 interface ChatbotConversationProps {
   conversation: ConversationEntry[];
+  handleSuggestivePromptClick: (prompt: string) => void;
 }
 
 const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
   conversation,
+  handleSuggestivePromptClick,
 }) => {
   useEffect(() => {
     const chatContainer = document.getElementById("chatbot-conversation");
@@ -37,13 +39,7 @@ const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
                   className={`suggestive-prompt-button ${
                     prompt.clicked ? "clicked" : ""
                   }`}
-                  onClick={() => {
-                    const userInputField = document.getElementById(
-                      "user-input"
-                    ) as HTMLInputElement;
-                    userInputField.value = prompt.text;
-                    document.getElementById("submit-btn")?.click();
-                  }}
+                  onClick={() => handleSuggestivePromptClick(prompt.text)}
                 >
                   {prompt.text}
                 </button>
