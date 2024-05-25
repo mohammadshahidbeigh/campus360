@@ -187,6 +187,21 @@ const App: React.FC = () => {
       ];
     }
 
+    // Handling admission-related queries
+    // const admissionKeywords = [
+    //   "admission",
+    //   "admissions",
+    //   "apply",
+    //   "application",
+    // ];
+    // if (
+    //   admissionKeywords.some((keyword) =>
+    //     userInput.toLowerCase().includes(keyword)
+    //   )
+    // ) {
+    //   return ["Send documents using the attachment button."];
+    // }
+
     try {
       // Split input into keywords and phrases to enhance search relevance
       const keywords = userInput.split(/\s+/).filter((word) => word.length > 2);
