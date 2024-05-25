@@ -76,7 +76,7 @@ const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
                 entry.speaker === "ai" ? "speech-ai" : "speech-human"
               } p-2 rounded-lg`}
             >
-              <div>{entry.text}</div>
+              <div dangerouslySetInnerHTML={{ __html: entry.text }} />
             </div>
             {entry.timestamp && (
               <div

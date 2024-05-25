@@ -188,19 +188,25 @@ const App: React.FC = () => {
     }
 
     // Handling admission-related queries
-    // const admissionKeywords = [
-    //   "admission",
-    //   "admissions",
-    //   "apply",
-    //   "application",
-    // ];
-    // if (
-    //   admissionKeywords.some((keyword) =>
-    //     userInput.toLowerCase().includes(keyword)
-    //   )
-    // ) {
-    //   return ["Send documents using the attachment button."];
-    // }
+    const admissionKeywords = [
+      "admission",
+      "admissions",
+      "apply",
+      "application",
+    ];
+    if (
+      admissionKeywords.some((keyword) =>
+        userInput.toLowerCase().includes(keyword)
+      )
+    ) {
+      // Add notification message to the conversation
+      addMessage({
+        speaker: "ai",
+        text: '<a href="https://admissions.mietjmu.in" target="_blank" rel="noopener noreferrer"> Click here to APPLY NOW </a>',
+        timestamp: new Date().toISOString(),
+      });
+      return [];
+    }
 
     try {
       // Split input into keywords and phrases to enhance search relevance
