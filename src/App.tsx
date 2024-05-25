@@ -68,6 +68,7 @@ const App: React.FC = () => {
     const userMessage: ConversationEntry = {
       speaker: "human",
       text: prompt,
+      timestamp: new Date().toISOString(), // Add timestamp here
     };
     addMessage(userMessage);
     setIsLoading(true);
@@ -156,7 +157,6 @@ const App: React.FC = () => {
         const aiMessage: ConversationEntry = {
           speaker: "ai",
           text: response,
-          timestamp: new Date().toISOString(), // Add timestamp here
           prompts: [], // Initialize with an empty array for prompts
         };
         addMessage(aiMessage);
@@ -203,7 +203,7 @@ const App: React.FC = () => {
       addMessage({
         speaker: "ai",
         text: '<a href="https://admissions.mietjmu.in" target="_blank" rel="noopener noreferrer"> Click here to APPLY NOW </a>',
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString(), // Add timestamp here
       });
       return [];
     }

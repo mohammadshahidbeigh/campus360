@@ -26,7 +26,8 @@ const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
     handleSuggestivePromptClick(prompt);
   };
 
-  const formatDate = (timestamp: string): string => {
+  const formatDate = (timestamp?: string): string => {
+    if (!timestamp) return "";
     const date = new Date(timestamp);
     if (isNaN(date.getTime())) {
       console.error("Invalid timestamp:", timestamp); // Log invalid timestamp
@@ -78,12 +79,8 @@ const ChatbotConversation: React.FC<ChatbotConversationProps> = ({
             >
               <div dangerouslySetInnerHTML={{ __html: entry.text }} />
             </div>
-            {entry.timestamp && (
-              <div
-                className={`timestamp ${
-                  entry.speaker === "ai" ? "speech-ai" : "speech-human"
-                }`}
-              >
+            {entry.speaker === "human" && entry.timestamp && (
+              <div className="timestamp speech-human">
                 {new Date(entry.timestamp).toLocaleTimeString()}
               </div>
             )}
