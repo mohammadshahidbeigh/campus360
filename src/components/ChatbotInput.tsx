@@ -97,7 +97,7 @@ standalone question:`;
         const newEntry: ConversationEntry = {
           speaker: "ai",
           text: response,
-          timestamp: new Date().toLocaleTimeString(), // Add timestamp here
+          timestamp: new Date().toLocaleString(), // Add timestamp here
           prompts: prompts.map((prompt) => ({ text: prompt, clicked: false })),
         };
 
@@ -125,7 +125,7 @@ standalone question:`;
     const userMessage: ConversationEntry = {
       speaker: "human",
       text: input,
-      timestamp: new Date().toLocaleTimeString(), // Add timestamp here
+      timestamp: new Date().toLocaleString(), // Add timestamp here
     };
     addMessage(userMessage);
     setInput("");
@@ -136,7 +136,7 @@ standalone question:`;
       const aiMessage: ConversationEntry = {
         speaker: "ai",
         text: response,
-        timestamp: new Date().toLocaleTimeString(), // Add timestamp here
+        timestamp: new Date().toLocaleString(), // Add timestamp here
       };
       addMessage(aiMessage);
     }

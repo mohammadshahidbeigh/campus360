@@ -23,7 +23,7 @@ const App: React.FC = () => {
     {
       speaker: "ai",
       text: "Hey there! Welcome to MIET virtual assistant. How can I assist you today?",
-      timestamp: new Date().toLocaleTimeString(),
+      timestamp: new Date().toISOString(),
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +43,7 @@ const App: React.FC = () => {
     setConversation((prevConversation) => {
       const newConversation = [
         ...prevConversation,
-        { ...message, timestamp: new Date().toLocaleTimeString() },
+        { ...message, timestamp: new Date().toISOString() },
       ];
       localStorage.setItem(
         "conversationEntries",
@@ -58,7 +58,7 @@ const App: React.FC = () => {
       {
         speaker: "ai",
         text: "Hey there! Welcome to MIET virtual assistant. How can I assist you today?",
-        timestamp: new Date().toLocaleTimeString(),
+        timestamp: new Date().toISOString(),
       },
     ]);
     localStorage.removeItem("conversationEntries");
@@ -156,7 +156,7 @@ const App: React.FC = () => {
         const aiMessage: ConversationEntry = {
           speaker: "ai",
           text: response,
-          timestamp: new Date().toLocaleTimeString(), // Add timestamp here
+          timestamp: new Date().toISOString(), // Add timestamp here
           prompts: [], // Initialize with an empty array for prompts
         };
         addMessage(aiMessage);
