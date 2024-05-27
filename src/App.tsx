@@ -271,7 +271,11 @@ const App: React.FC = () => {
             />
           </svg>
         ) : (
-          "Chat with MietBot 🤖"
+          <img
+            src="/src/assets/images/message-icon.png"
+            alt="Chat with KnowItHere"
+            className="h-10 w-10"
+          />
         )}
       </button>
 
