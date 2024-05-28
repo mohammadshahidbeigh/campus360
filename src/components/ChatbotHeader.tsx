@@ -9,7 +9,7 @@ const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({ clearConversation }) => {
   return (
     <div className="chatbot-header text-center">
       <img src={mietLogo} className="logo mx-auto" alt="MIET Logo" />
-      <h1 className="text-lg font-bold text-white">AI Chatbot</h1>
+      <h1 className="text-lg font-bold text-white">AI CHATBOT</h1>
       <h2 className="text-xs text-white">
         A virtual assistant from MIET, Jammu.
       </h2>
