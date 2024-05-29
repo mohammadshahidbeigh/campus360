@@ -173,7 +173,7 @@ standalone question:`;
         required
       />
       <div className="absolute right-0 flex space-x-1 pr-2">
-        <button
+        {/* <button
           id="microphone-btn"
           className="p-2 w-10 h-10 flex items-center justify-center rounded-lg"
         >
@@ -182,7 +182,7 @@ standalone question:`;
             className="microphone-icon w-5 h-5"
             alt="Microphone"
           />
-        </button>
+        </button> */}
         <button
           id="submit-btn"
           className="p-2 w-10 h-10 flex items-center justify-center rounded-lg"
