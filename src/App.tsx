@@ -226,7 +226,7 @@ const App: React.FC = () => {
 
   const extractPrompts = (
     combinedText: string,
-    userInput: string,
+    _userInput: string,
     limit: number
   ): string[] => {
     const questionRegex =
