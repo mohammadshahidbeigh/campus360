@@ -33,6 +33,13 @@ Campus360 is an AI-driven virtual assistant designed to provide real-time suppor
 - **Embedding Storage:** Uses Supabase Vector Database to manage OpenAI embeddings effectively.
 - **Optimized Response Generation:** Enhances response accuracy and relevance through RAG, Prompt Engineering, and Langchain.js.
 
+
+## Research Paper
+
+You can find the detailed research paper on the development and impact of Campus360 on [arXiv](https://arxiv.org/abs/your-paper-id).
+
+
+
 ## Installation and Setup
 
 To set up the Campus360 project locally, follow these steps:
