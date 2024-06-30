@@ -1,5 +1,5 @@
 import React from "react";
-import mietLogo from "../assets/images/miet-bg.png"; // Adjust the path according to your project structure
+import mietLogo from "../assets/images/miet-logo.png"; // Adjust the path according to your project structure
 
 interface ChatbotHeaderProps {
   clearConversation: () => void;
