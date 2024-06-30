@@ -16,6 +16,7 @@ import {
   RunnableSequence,
 } from "@langchain/core/runnables";
 import "./index.css"; // Make sure to import your CSS file
+import messageIcon from "./assets/images/message-icon.png";
 
 const App: React.FC = () => {
   const [isChatbotVisible, setIsChatbotVisible] = useState(false);
@@ -272,7 +273,7 @@ const App: React.FC = () => {
           </svg>
         ) : (
           <img
-            src="src\assets\images\message-icon.png"
+            src={messageIcon}
             alt="Chat with KnowItHere"
             className="h-10 w-10"
           />
