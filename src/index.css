@@ -62,7 +62,7 @@
 }
 
 .App {
-  background-image: url("src/assets/images/miet-bg.png");
+  background-image: url("./assets/images/miet-bg.png");
   background-size: cover;
   background-position: center;
   min-height: 100vh;
@@ -74,7 +74,7 @@
   display: inline-block;
   width: 24px; /* Adjust the width and height as needed */
   height: 24px; /* Adjust the width and height as needed */
-  background: url("src/assets/images/loading.png") no-repeat center center;
+  background: url("./assets/images/miet-bg.png") no-repeat center center;
   background-size: contain;
   animation: cursor-blink 1s steps(1) infinite;
 }

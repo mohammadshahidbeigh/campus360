@@ -249,7 +249,7 @@ const App: React.FC = () => {
   return (
     <div
       className="App bg-cover bg-center min-h-screen"
-      style={{ backgroundImage: "url('src/assets/images/miet-bg.png')" }}
+      style={{ backgroundImage: "url(('./assets/images/miet-bg.png')" }}
     >
       <button
         className={`fixed bottom-4 right-4 bg-blue-500 text-white p-4 rounded-full shadow-lg z-50 flex items-center justify-center transition-transform ${
@@ -272,7 +272,7 @@ const App: React.FC = () => {
           </svg>
         ) : (
           <img
-            src="/src/assets/images/message-icon.png"
+            src="./assets/images/message-icon.png"
             alt="Chat with KnowItHere"
             className="h-10 w-10"
           />
