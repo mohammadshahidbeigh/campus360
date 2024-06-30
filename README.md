@@ -17,7 +17,6 @@ Campus360 is an AI-driven virtual assistant designed to provide real-time suppor
   - Tailwind CSS
 
 - **Back-end:**
-  - Python
   - OpenAI API
   - Firebase
   - Supabase Vector Database for OpenAI embeddings
@@ -30,7 +29,6 @@ Campus360 is an AI-driven virtual assistant designed to provide real-time suppor
 ## Key Functionalities
 
 - **Front-end Development:** Utilizes ReactJs, TypeScript, and Tailwind CSS to create a responsive and user-friendly interface.
-- **Web Scraping:** Implements Python for extracting data from various sources to enhance the knowledge base of the virtual assistant.
 - **Database Management:** Employs Firebase and Supabase for efficient data storage and retrieval.
 - **Embedding Storage:** Uses Supabase Vector Database to manage OpenAI embeddings effectively.
 - **Optimized Response Generation:** Enhances response accuracy and relevance through RAG, Prompt Engineering, and Langchain.js.
@@ -47,30 +45,16 @@ To set up the Campus360 project locally, follow these steps:
 
 2. **Install Front-end Dependencies:**
     ```sh
-    cd frontend
     npm install
     ```
 
-3. **Install Back-end Dependencies:**
+3. **Configure Environment Variables:**
+    Create a `.env` file in the root directory and add the necessary environment variables for OpenAI API, Firebase, and Supabase.
+
+4. **Run the Application:**
     ```sh
-    cd backend
-    pip install -r requirements.txt
+    npm start
     ```
-
-4. **Configure Environment Variables:**
-    Create a `.env` file in both the `frontend` and `backend` directories and add the necessary environment variables for OpenAI API, Firebase, and Supabase.
-
-5. **Run the Application:**
-    - **Front-end:**
-        ```sh
-        cd frontend
-        npm start
-        ```
-    - **Back-end:**
-        ```sh
-        cd backend
-        python app.py
-        ```
 
 ## Usage
 
