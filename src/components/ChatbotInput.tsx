@@ -190,7 +190,7 @@ standalone question:`;
           disabled={isLoading} // Disable button when loading
         >
           <img
-            src="src/assets/images/send-btn-icon.png"
+            src="../assets/images/message-icon.png"
             className="send-btn-icon w-5 h-6"
             alt="Send"
           />
