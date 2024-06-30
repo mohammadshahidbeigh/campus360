@@ -110,9 +110,8 @@ const App: React.FC = () => {
       answer: `;
       const answerPrompt = PromptTemplate.fromTemplate(answerTemplate);
 
-      const llm = new ChatOpenAI({
-        openAIApiKey: "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",
-      });
+      const openAIApiKey = import.meta.env.VITE_OPENAI_API_KEY;
+      const llm = new ChatOpenAI({ openAIApiKey });
 
       const standaloneQuestionChain = standaloneQuestionPrompt
         .pipe(llm)

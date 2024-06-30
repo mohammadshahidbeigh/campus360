@@ -2,8 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
 const appSettings = {
-  databaseURL:
-    "https://mietbot-2-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  databaseURL: import.meta.env.VITE_DATABASE_URL,
 };
 
 const app = initializeApp(appSettings);

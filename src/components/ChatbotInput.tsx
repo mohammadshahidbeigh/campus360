@@ -31,7 +31,7 @@ const ChatbotInput: React.FC<ChatbotInputProps> = ({
 }) => {
   const [input, setInput] = useState<string>("");
 
-  const openAIApiKey = "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";
+  const openAIApiKey = import.meta.env.VITE_OPENAI_API_KEY;
   const llm = new ChatOpenAI({ openAIApiKey });
 
   const standaloneQuestionTemplate = `Given some conversation history (if any) and a question, convert the question to a standalone question. 
