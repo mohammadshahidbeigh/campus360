@@ -36,7 +36,7 @@ Campus360 is an AI-driven virtual assistant designed to provide real-time suppor
 
 ## Research Paper
 
-You can find the detailed research paper on the development and impact of Campus360 on [arXiv](https://arxiv.org/abs/your-paper-id).
+You can find the detailed research paper on the development and impact of Campus360 on [ResearchGate](https://www.researchgate.net/publication/381831628_AI-BASED_CHATBOT_FOR_EDUCATIONAL_INSTITUTES?channel=doi&linkId=66811d2c2aa57f3b8260ba91&showFulltext=true).
 
 
 
@@ -60,7 +60,7 @@ To set up the Campus360 project locally, follow these steps:
 
 4. **Run the Application:**
     ```sh
-    npm start
+    npm start dev
     ```
 
 ## Usage
@@ -77,7 +77,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-For any inquiries or support, please reach out to [your-email@example.com](mailto:your-email@example.com).
+For any inquiries or support, please reach out to [your-email@example.com](mailto:mohammadshahidbeigh@gmail.com).
 
 ---
 
