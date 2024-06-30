@@ -272,7 +272,7 @@ const App: React.FC = () => {
           </svg>
         ) : (
           <img
-            src="./assets/images/message-icon.png"
+            src="src\assets\images\message-icon.png"
             alt="Chat with KnowItHere"
             className="h-10 w-10"
           />
