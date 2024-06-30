@@ -74,7 +74,7 @@
   display: inline-block;
   width: 24px; /* Adjust the width and height as needed */
   height: 24px; /* Adjust the width and height as needed */
-  background: url("./assets/images/miet-bg.png") no-repeat center center;
+  background: url("./assets/images/loading.png") no-repeat center center;
   background-size: contain;
   animation: cursor-blink 1s steps(1) infinite;
 }

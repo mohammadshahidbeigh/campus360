@@ -12,6 +12,7 @@ import {
   RunnablePassthrough,
   RunnableSequence,
 } from "@langchain/core/runnables";
+import sendBtnIcon from "../assets/images/send-btn-icon.png";
 
 interface ChatbotInputProps {
   addMessage: (message: ConversationEntry) => void;
@@ -189,11 +190,7 @@ standalone question:`;
           onClick={handleSubmit}
           disabled={isLoading} // Disable button when loading
         >
-          <img
-            src="../assets/images/message-icon.png"
-            className="send-btn-icon w-5 h-6"
-            alt="Send"
-          />
+          <img src={sendBtnIcon} className="send-btn-icon w-5 h-6" alt="Send" />
         </button>
       </div>
     </div>
