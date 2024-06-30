@@ -36,7 +36,8 @@ Campus360 is an AI-driven virtual assistant designed to provide real-time suppor
 
 ## Research Paper
 
-You can find the detailed research paper on the development and impact of Campus360 on [ResearchGate](https://www.researchgate.net/publication/381831628_AI-BASED_CHATBOT_FOR_EDUCATIONAL_INSTITUTES?channel=doi&linkId=66811d2c2aa57f3b8260ba91&showFulltext=true).
+You can find the detailed research paper on the development and impact of  Campus360-[AI-BASED CHATBOT FOR EDUCATIONAL
+                  INSTITUTES] on [ResearchGate](https://www.researchgate.net/publication/381831628_AI-BASED_CHATBOT_FOR_EDUCATIONAL_INSTITUTES?channel=doi&linkId=66811d2c2aa57f3b8260ba91&showFulltext=true).
 
 
 
