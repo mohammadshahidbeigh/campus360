@@ -273,7 +273,7 @@ const App: React.FC = () => {
         ) : (
           <img
             src={messageIcon}
-            alt="Chat with KnowItHere"
+            alt="Campus360 MessageIcon"
             className="h-10 w-10"
           />
         )}
