@@ -6,7 +6,7 @@ Campus360 is an AI-driven virtual assistant designed to provide real-time suppor
 
 - **Real-time Support:** Offers immediate assistance and information to users.
 - **Personalized Assistance:** Customizes responses and support based on individual user needs.
-- **Enhanced Communication:** Reduced language barriers by using the advanced OpenAI GPT Model like GPT4.
+- **Enhanced Communication:** Reduced language barriers by using the advance OpenAI GPT Model like GPT4.
 - **Comprehensive Support:** Caters to students, faculty, and visitors with a wide range of queries and requirements.
 
 ## Technology Stack
