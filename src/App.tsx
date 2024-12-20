@@ -280,10 +280,10 @@ const App: React.FC = () => {
       <div className="fixed top-0 left-0 right-0 bg-green-500 text-white overflow-hidden z-50 py-2">
         <div className="marquee-container">
           <div className="marquee-content">
-            ⚠️ This chatbot is a presentation project for Model Institute Of Engineering & Technology, Jammu and is optimized for desktop viewing. Some features may not work as intended on mobile devices. Please use a desktop for the best experience.
+            ⚠️ This Chatbot is a Presentation Project for Model Institute Of Engineering & Technology, Jammu and is optimized for desktop viewing. Some features may not work as intended on mobile devices. Please use a desktop for the best experience.
           </div>
           <div className="marquee-content" aria-hidden="true">
-            ⚠️ This chatbot is a presentation project for Model Institute Of Engineering & Technology, Jammu and is optimized for desktop viewing. Some features may not work as intended on mobile devices. Please use a desktop for the best experience.
+            ⚠️ This Chatbot is a Presentation Project for Model Institute Of Engineering & Technology, Jammu and is optimized for desktop viewing. Some features may not work as intended on mobile devices. Please use a desktop for the best experience.
           </div>
         </div>
       </div>
