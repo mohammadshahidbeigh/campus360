@@ -15,6 +15,10 @@ Campus360 is an AI-driven virtual assistant designed to provide real-time suppor
   - ReactJs
   - TypeScript
   - Tailwind CSS
+  - React-toastify
+  - Framer-motion
+  - Vite
+  - Vercel
 
 - **Back-end:**
   - OpenAI API

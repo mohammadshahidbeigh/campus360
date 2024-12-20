@@ -3,6 +3,8 @@ import ChatbotHeader from "./components/ChatbotHeader";
 import ChatbotConversation from "./components/ChatbotConversation";
 import ChatbotInput from "./components/ChatbotInput";
 import { ConversationEntry } from "./types";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
@@ -15,8 +17,8 @@ import {
   RunnablePassthrough,
   RunnableSequence,
 } from "@langchain/core/runnables";
-import "./index.css"; // Make sure to import your CSS file
 import messageIcon from "./assets/images/message-icon.png";
+import mietBg from "./assets/images/miet-bg.png";
 
 const App: React.FC = () => {
   const [isChatbotVisible, setIsChatbotVisible] = useState(false);
@@ -36,61 +38,87 @@ const App: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const checkMobileDevice = () => {
+      if (window.innerWidth < 768) {
+        setTimeout(() => {}, 10000); // Hide after 10 seconds
+      }
+    };
+
+    checkMobileDevice();
+    window.addEventListener('resize', checkMobileDevice);
+
+    return () => window.removeEventListener('resize', checkMobileDevice);
+  }, []);
+
   const toggleChatbotVisibility = () => {
     setIsChatbotVisible(!isChatbotVisible);
   };
 
-  const addMessage = useCallback((message: ConversationEntry) => {
-    setConversation((prevConversation) => {
-      const newConversation = [
-        ...prevConversation,
-        { ...message, timestamp: new Date().toISOString() },
-      ];
-      localStorage.setItem(
-        "conversationEntries",
-        JSON.stringify(newConversation)
-      );
-      return newConversation;
-    });
-  }, []);
-
   const clearConversation = () => {
-    setConversation([
-      {
-        speaker: "ai",
-        text: "Hey there! Welcome to MIET virtual assistant. How can I assist you today?",
-        timestamp: new Date().toISOString(),
-      },
-    ]);
-    localStorage.removeItem("conversationEntries");
+    try {
+      setConversation([
+        {
+          speaker: "ai",
+          text: "Hey there! Welcome to MIET virtual assistant. How can I assist you today?",
+          timestamp: new Date().toISOString(),
+        },
+      ]);
+      localStorage.removeItem("conversationEntries");
+      toast.success("Conversation cleared successfully!");
+    } catch (error) {
+      toast.error("Failed to clear conversation. Please try again.");
+    }
   };
 
+  const addMessage = useCallback((message: ConversationEntry) => {
+    try {
+      setConversation((prevConversation) => {
+        const newConversation = [
+          ...prevConversation,
+          { ...message, timestamp: new Date().toISOString() },
+        ];
+        localStorage.setItem(
+          "conversationEntries",
+          JSON.stringify(newConversation)
+        );
+        return newConversation;
+      });
+    } catch (error) {
+      toast.error("Failed to add message. Please try again.");
+    }
+  }, []);
+
   const handleSuggestivePromptClick = async (prompt: string) => {
-    const userMessage: ConversationEntry = {
-      speaker: "human",
-      text: prompt,
-      timestamp: new Date().toISOString(), // Add timestamp here
-    };
-    addMessage(userMessage);
-    setIsLoading(true);
+    try {
+      const userMessage: ConversationEntry = {
+        speaker: "human",
+        text: prompt,
+        timestamp: new Date().toLocaleString(),
+      };
+      addMessage(userMessage);
+      setIsLoading(true);
 
-    // Trigger the conversation progression
-    await progressConversation(prompt);
+      // Trigger the conversation progression
+      await progressConversation(prompt);
 
-    // Generate and add new suggestive prompts after processing the clicked prompt
-    const newPrompts = await generateSuggestivePrompts(prompt);
-    setConversation((prevConversation) => {
-      const lastMessageIndex = prevConversation.length - 1;
-      const lastMessage = prevConversation[lastMessageIndex];
-      if (lastMessage && lastMessage.speaker === "ai") {
-        lastMessage.prompts = newPrompts.map((newPrompt) => ({
-          text: newPrompt,
-          clicked: false,
-        }));
-      }
-      return [...prevConversation];
-    });
-    setIsLoading(false);
+      // Generate and add new suggestive prompts after processing the clicked prompt
+      const newPrompts = await generateSuggestivePrompts(prompt);
+      setConversation((prevConversation) => {
+        const lastMessageIndex = prevConversation.length - 1;
+        const lastMessage = prevConversation[lastMessageIndex];
+        if (lastMessage && lastMessage.speaker === "ai") {
+          lastMessage.prompts = newPrompts.map((newPrompt) => ({
+            text: newPrompt,
+            clicked: false,
+          }));
+        }
+        return [...prevConversation];
+      });
+      setIsLoading(false);
+    } catch (error) {
+      toast.error("Failed to process prompt. Please try again.");
+    }
   };
 
   const progressConversation = useCallback(
@@ -173,42 +201,40 @@ const App: React.FC = () => {
     [conversation, addMessage]
   );
 
-  const generateSuggestivePrompts = async (
-    userInput: string
-  ): Promise<string[]> => {
-    // Handling casual greetings
-    const greetings = ["hey", "hello", "hi", "hii"];
-    if (greetings.includes(userInput.toLowerCase())) {
-      return [
-        "When was MIET established?",
-        "Tell me about MIET's history.",
-        "What courses are available at MIET?",
-        "How can I apply to MIET?",
-      ];
-    }
-
-    // Handling admission-related queries
-    const admissionKeywords = [
-      "admission",
-      "admissions",
-      "apply",
-      "application",
-    ];
-    if (
-      admissionKeywords.some((keyword) =>
-        userInput.toLowerCase().includes(keyword)
-      )
-    ) {
-      // Add notification message to the conversation
-      addMessage({
-        speaker: "ai",
-        text: '<a href="https://admissions.mietjmu.in" target="_blank" rel="noopener noreferrer"> Click here to APPLY NOW </a>',
-        timestamp: new Date().toISOString(), // Add timestamp here
-      });
-      return [];
-    }
-
+  const generateSuggestivePrompts = async (userInput: string) => {
     try {
+      // Handling casual greetings
+      const greetings = ["hey", "hello", "hi", "hii"];
+      if (greetings.includes(userInput.toLowerCase())) {
+        return [
+          "When was MIET established?",
+          "Tell me about MIET's history.",
+          "What courses are available at MIET?",
+          "How can I apply to MIET?",
+        ];
+      }
+
+      // Handling admission-related queries
+      const admissionKeywords = [
+        "admission",
+        "admissions",
+        "apply",
+        "application",
+      ];
+      if (
+        admissionKeywords.some((keyword) =>
+          userInput.toLowerCase().includes(keyword)
+        )
+      ) {
+        // Add notification message to the conversation
+        addMessage({
+          speaker: "ai",
+          text: '<a href="https://admissions.mietjmu.in" target="_blank" rel="noopener noreferrer"> Click here to APPLY NOW </a>',
+          timestamp: new Date().toISOString(), // Add timestamp here
+        });
+        return [];
+      }
+
       // Split input into keywords and phrases to enhance search relevance
       const keywords = userInput.split(/\s+/).filter((word) => word.length > 2);
 
@@ -219,7 +245,7 @@ const App: React.FC = () => {
 
       return extractPrompts(combinedDocuments, userInput, 3);
     } catch (error) {
-      console.error("Error in generateSuggestivePrompts:", error);
+      toast.error("Error generating prompts. Please try again.");
       return [];
     }
   };
@@ -248,9 +274,20 @@ const App: React.FC = () => {
 
   return (
     <div
-      className="App bg-cover bg-center min-h-screen"
-      style={{ backgroundImage: "url(('./assets/images/miet-bg.png')" }}
+      className="App min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url(${mietBg})` }}
     >
+      <div className="fixed top-0 left-0 right-0 bg-green-500 text-white overflow-hidden z-50 py-2">
+        <div className="marquee-container">
+          <div className="marquee-content">
+            ⚠️ This chatbot is a presentation project for Model Institute Of Engineering & Technology, Jammu and is optimized for desktop viewing. Some features may not work as intended on mobile devices. Please use a desktop for the best experience.
+          </div>
+          <div className="marquee-content" aria-hidden="true">
+            ⚠️ This chatbot is a presentation project for Model Institute Of Engineering & Technology, Jammu and is optimized for desktop viewing. Some features may not work as intended on mobile devices. Please use a desktop for the best experience.
+          </div>
+        </div>
+      </div>
+
       <button
         className={`fixed bottom-4 right-4 bg-blue-500 text-white p-4 rounded-full shadow-lg z-50 flex items-center justify-center transition-transform ${
           !isChatbotVisible ? "animate-bounce" : ""
@@ -281,29 +318,43 @@ const App: React.FC = () => {
 
       {isChatbotVisible && (
         <>
-          <div className="fixed bottom-20 right-4 w-80 h-[36rem] bg-white rounded-lg shadow-lg transition-transform transform-gpu z-50">
+          <div className="fixed bottom-20 right-4 w-80 h-[36rem] bg-white rounded-lg shadow-lg z-50">
             <ChatbotHeader clearConversation={clearConversation} />
           </div>
-          <div className="fixed bottom-20 right-4 w-80 bg-white p-4 rounded-lg shadow-lg transition-transform transform-gpu z-50">
+          <div className="fixed bottom-20 right-4 w-80 bg-white p-4 rounded-lg shadow-lg z-50">
             <main>
               <section className="chatbot-container">
                 <ChatbotConversation
                   conversation={conversation}
                   handleSuggestivePromptClick={handleSuggestivePromptClick}
-                  isLoading={isLoading} // Pass loading state
+                  isLoading={isLoading}
                 />
                 <ChatbotInput
                   addMessage={addMessage}
                   conversation={conversation}
                   generateSuggestivePrompts={generateSuggestivePrompts}
-                  setIsLoading={setIsLoading} // Pass setLoading function
-                  isLoading={isLoading} // Pass loading state
+                  setIsLoading={setIsLoading}
+                  isLoading={isLoading}
                 />
               </section>
             </main>
           </div>
         </>
       )}
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        limit={3}
+      />
     </div>
   );
 };

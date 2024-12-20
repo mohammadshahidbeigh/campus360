@@ -13,6 +13,8 @@ import {
   RunnableSequence,
 } from "@langchain/core/runnables";
 import sendBtnIcon from "../assets/images/send-btn-icon.png";
+import { apiRateLimiter } from "../utils/rateLimit";
+import { toast } from "react-toastify";
 
 interface ChatbotInputProps {
   addMessage: (message: ConversationEntry) => void;
@@ -119,33 +121,59 @@ standalone question:`;
     [conversation, addMessage, chain, generateSuggestivePrompts, setIsLoading]
   );
 
-  const handleSubmit = useCallback(async () => {
-    if (input.trim() === "" || isLoading) return; // Check isLoading state
-
-    const userMessage: ConversationEntry = {
-      speaker: "human",
-      text: input,
-      timestamp: new Date().toLocaleString(), // Add timestamp here
-    };
-    addMessage(userMessage);
-    setInput("");
-
-    const response = await progressConversation(input);
-
-    if (response) {
-      const aiMessage: ConversationEntry = {
-        speaker: "ai",
-        text: response,
-      };
-      addMessage(aiMessage);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!input.trim()) {
+      toast.warning("Please enter a message before sending.");
+      return;
     }
-  }, [input, addMessage, progressConversation, isLoading]);
+
+    if (isLoading) {
+      toast.info("Please wait while processing your previous message.");
+      return;
+    }
+
+    try {
+      const canProceed = await apiRateLimiter.checkRateLimit();
+      if (!canProceed) {
+        const waitTime = Math.ceil(apiRateLimiter.getTimeUntilReset() / 1000);
+        toast.warning(`Please wait ${waitTime} seconds before sending another message.`);
+        return;
+      }
+
+      setIsLoading(true);
+      const userMessage: ConversationEntry = {
+        speaker: "human",
+        text: input,
+        timestamp: new Date().toLocaleString(),
+      };
+      addMessage(userMessage);
+      setInput("");
+
+      const response = await progressConversation(input);
+      if (response) {
+        const aiMessage: ConversationEntry = {
+          speaker: "ai",
+          text: response,
+        };
+        addMessage(aiMessage);
+      } else {
+        toast.error("No response received. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+      toast.error("An error occurred while processing your message. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Enter") {
         event.preventDefault();
-        handleSubmit();
+        handleSubmit(new Event('submit') as unknown as React.FormEvent);
       }
     };
 
